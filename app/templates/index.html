@@ -1,8 +1,9 @@
 {% extends "base.html" %}
-
 {% block content %}
-    <h1>Hi, {{ user.username }}!</h1>
+    <!--Instead of the fake user I can use Flask-Login's current_user in the template-->
+    <h1>Hi, {{ current_user.username }}!</h1>
     {% for post in posts %}
     <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
     {% endfor %}
-{% endblock %}
+   <!--<embed height="50" width="250" src="/music/bmha.mp3"></embed>-->
+    {% endblock %}
