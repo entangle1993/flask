@@ -1,0 +1,35 @@
+<!--用户个人资料模板-->
+{% extends "base.html" %}
+
+{% block content %}
+    <table>
+        <tr valign="top">
+            <!--表格位置&用户头像-->
+            <td><img src="{{ user.avatar(64) }}"></td>
+            <td>
+                <h1>ここは： {{ user.username }}</h1>
+                <!--在用户个人资料模板中显示用户信息-->
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}<p>上次登录: {{ user.last_seen }}</p>{% endif %}
+                <!--确保在您查看自己的个人资料时显示编辑链接，但在查看其他人的个人资料时则不会。-->
+                {% if user == current_user %}
+                <p><a href="{{ url_for('edit_profile') }}">编辑你的页面吧~</a></p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    <hr>
+    {% for post in posts %}
+    <!--<p>-->
+    <!--{{ post.author.username }} 说道: <b>{{ post.body }}</b>-->
+    <!--</p>-->
+    <!--<table>-->
+        <!--<tr valign="top">-->
+            <!--<td><img src="{{ post.author.avatar(36) }}"></td>-->
+            <!--<td>{{ post.author.username }} 说:<br>{{ post.body }}</td>-->
+        <!--</tr>-->
+    <!--</table>-->
+<!--使用Jinja2的include-->
+        {% include '_post.html' %}
+    {% endfor %}
+{% endblock %}

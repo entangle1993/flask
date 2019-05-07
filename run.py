@@ -1,4 +1,5 @@
 from app import app, db
+#The Flask application instance is called app and is a member of the app package.
 from app.models import User, Post
 
 
@@ -8,5 +9,3 @@ def make_shell_context():
 
 app.run(debug=True)
 
-#运行前先到python3.7里执行>>> from app import db
-#>>> db.create_all()创建数据库

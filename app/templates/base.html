@@ -8,13 +8,14 @@
     </head>
     <body>
         <div>
-            Microblog:
-            <a href="{{ url_for('index') }}">Home</a>
+            小站:
+            <a href="{{ url_for('index') }}">主页</a>
             <!--登录后改为注销-->
             {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('login') }}">登录</a>
             {% else %}
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('user', username=current_user.username) }}">个人主页</a>
+            <a href="{{ url_for('logout') }}">注销</a>
             {% endif %}
         </div>
         <hr>
