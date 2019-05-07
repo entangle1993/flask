@@ -15,5 +15,6 @@ $ flask db upgrade
 
 
 I hope you realize how useful it is to work with a migration framework. Any users that were in the database are still there, the migration framework surgically applies the changes in the migration script without destroying any data.
+
 learned from:
 > https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world
