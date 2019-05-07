@@ -1,7 +1,7 @@
 # flask 
  
 ## 数据库  
-开始时需要创建数据库  
+注册，编辑等需要创建数据库  
 
 \>> from app import db  
 \>> db.create_all()
