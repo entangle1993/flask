@@ -2,8 +2,22 @@
 {% block content %}
     <!--Instead of the fake user I can use Flask-Login's current_user in the template-->
     <h1>哟, {{ current_user.username }}!</h1>
+<!--索引模板中的帖子提交表单-->
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.post.label }}<br>
+            {{ form.post(cols=32, rows=4) }}<br>
+            {% for error in form.post.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
     {% for post in posts %}
-    <div><p>{{ post.author.username }} sang: <b>{{ post.body }}</b></p></div>
+<!--    <div>-->
+        <p>{{ post.author.username }} : <b>{{ post.body }}</b></p>
+<!--    </div>-->
     {% endfor %}
    <!--<embed height=50 width=250 src="/music/bmha.mp3"></embed>-->
     {% endblock %}

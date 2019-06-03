@@ -1,10 +1,10 @@
 from flask import render_template, flash, redirect, url_for,request
 from app import app
 from flask_login import current_user,login_user,logout_user,login_required
-from app.models import User
+from app.models import User, Post
 from werkzeug.urls import url_parse
 from app import db
-from app.forms import LoginForm,RegistrationForm,EditProfileForm
+from app.forms import LoginForm,RegistrationForm,EditProfileForm, PostForm
 from datetime import datetime
 
 # 上次访问时间
@@ -14,23 +14,34 @@ def before_request():
         current_user.last_seen = datetime.now()
         db.session.commit()
 
-@app.route('/')
-@app.route('/index')
+@app.route('/',methods=['GET', 'POST'])
+@app.route('/index',methods=['GET', 'POST'])
 @login_required  # 未验证不能访问
 def index():
-    user = {'username': '台哥'}
-    posts = [
-        {
-            'author': {'username': '撒库yin'},
-            'body': '城里的月光把梦照亮，请温暖她心房'
-        },
-        {
-            'author': {'username': 'さくpopo'},
-            'body': '好无聊啊'
-        }
-    ]
-    return render_template('index.html', title='Home', posts=posts) #delete user =user
-    #render_template的功能是对先引入index.html，同时根据后面传入的参数，对html进行修改渲染。
+    # user = {'username': '台哥'}
+    # 帖子提交表单
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('index'))
+    posts = current_user.followed_posts().all()
+    # 显示主页中的真实帖子。
+    # posts = [
+    #     {
+    #         'author': {'username': '撒库yin'},
+    #         'body': '城里的月光把梦照亮，请温暖她心房'
+    #     },
+    #     {
+    #         'author': {'username': 'さくpopo'},
+    #         'body': '好无聊啊'
+    #     }
+    # ]
+    return render_template('index.html', title='Home', posts=posts)
+    # delete user =user
+    # render_template的功能是对先引入index.html，同时根据后面传入的参数，对html进行修改渲染。
 
 
 @app.route('/login', methods=['GET', 'POST'])

@@ -28,13 +28,13 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('该邮箱已经被使用')
 
-#about me表单
+# about me表单
 class EditProfileForm(FlaskForm):
     username = StringField('名前', validators=[DataRequired()])
     about_me = TextAreaField('关于我', validators=[Length(min=0, max=140)])
     submit = SubmitField('提交')
 
-    #编辑时验证用户名
+    # 编辑时验证用户名
     def __init__(self, original_username, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
         self.original_username = original_username
@@ -44,3 +44,8 @@ class EditProfileForm(FlaskForm):
             user = User.query.filter_by(username=self.username.data).first()
             if user is not None:
                 raise ValidationError('这个名字已经被抢先了Q.Q')
+
+# 博客提交表单
+class PostForm(FlaskForm):
+    post = TextAreaField('Say something', validators=[DataRequired()])
+    submit = SubmitField('Submit')
