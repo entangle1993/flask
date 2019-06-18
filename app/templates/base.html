@@ -11,6 +11,8 @@
             小站:
             <a href="{{ url_for('index') }}">主页</a>
             <!--登录后改为注销-->
+            <!-- 链接到导航栏的探索 -->
+            <a href="{{ url_for('explore') }}">Explore</a>
             {% if current_user.is_anonymous %}
             <a href="{{ url_for('login') }}">登录</a>
             {% else %}

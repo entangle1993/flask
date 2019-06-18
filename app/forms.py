@@ -47,5 +47,5 @@ class EditProfileForm(FlaskForm):
 
 # 博客提交表单
 class PostForm(FlaskForm):
-    post = TextAreaField('Say something', validators=[DataRequired()])
+    post = TextAreaField('Say something', validators=[DataRequired(), Length(min=1, max=140)])
     submit = SubmitField('Submit')
