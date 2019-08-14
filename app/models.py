@@ -1,10 +1,13 @@
-#用户数据库模型
-from app import db,login
+# 用户数据库模型
+from app import db, login, app
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from hashlib import md5
+from time import time
+import jwt
 
+# JSON Web Token
 # 关注者关联表
 followers = db.Table(
     'followers',
@@ -12,7 +15,8 @@ followers = db.Table(
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
 
-class User(UserMixin,db.Model):
+
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
@@ -31,9 +35,10 @@ class User(UserMixin,db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
-    #The __repr__ method tells Python how to print objects of this class, which is going to be useful for debugging.
 
-    #密码哈希&验证
+    # The __repr__ method tells Python how to print objects of this class, which is going to be useful for debugging.
+
+    # 密码哈希&验证
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -67,14 +72,32 @@ class User(UserMixin,db.Model):
             followers.c.follower_id == self.id)
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
+
+    # 重置密码令牌方法
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)
+
+
 # Flask-Login用户加载器功能
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
 
-#Posts database table and relationship
+
+# Posts database table and relationship
 class Post(db.Model):
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))

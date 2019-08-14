@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from config import Config
 from flask_login import LoginManager
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
+from flask_mail import Mail
+from config import Config
 
 app = Flask(__name__) #类实例
 app.config.from_object(Config)
@@ -16,6 +17,8 @@ migrate = Migrate(app, db)
 #Flask-Login初始化
 login = LoginManager(app)
 login.login_view = 'login'
+#need to create an instance right after the Flask application is created
+mail = Mail(app)
 
 #通过邮件记录错误
 if not app.debug:

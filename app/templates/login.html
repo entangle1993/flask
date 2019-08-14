@@ -22,4 +22,9 @@
         <p>{{ form.submit() }}</p>
     </form>
     <p>还没有账号? <a href="{{ url_for('register') }}">点击注册啊!</a></p>
+<!--请求重置密码-->
+    <p>
+        Forgot Your Password?
+        <a href="{{ url_for('reset_password_request') }}">Click to Reset It</a>
+    </p>
 {% endblock %}
